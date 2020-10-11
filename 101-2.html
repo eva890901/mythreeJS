@@ -33,6 +33,7 @@ $('#toggle').click(
 var renderer,camera,scene;
 var axes;
 
+
 init();
 animate();
 function init(){
@@ -53,6 +54,24 @@ function init(){
 	
 	axes = new THREE.AxesHelper(15);
 	scene.add(axes);
+	var geometry = new THREE.BoxGeometry(25,10,10);
+	var material = new THREE.MeshNormalMaterial();
+	var box = new THREE.Mesh(geometry,material);
+	box.position.set(12,5,5,0);
+	
+	
+	var geometry1 = new THREE.CylinderGeometry(5,5,10,64);
+	var cylinder = new THREE.Mesh(geometry1,material);
+	cylinder.position.set(20,15,5);
+	/*scene.add(cylinder);
+	scene.add(box);*/
+	var tank = new THREE.Object3D();
+	tank.add(box);
+	tank.add(cylinder);
+	scene.add(tank);
+	tank.position.set(0,0,-5);
+	
+	return ;
 }
 
 function animate(){
