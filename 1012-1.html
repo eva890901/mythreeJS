@@ -59,7 +59,6 @@ function init(){
 	var box = new THREE.Mesh(geometry,material);
 	box.position.set(10,0,0);
 	
-	
 	var geometry1 = new THREE.CylinderGeometry(2.5,2.5,10,64);
 	var cylinder = new THREE.Mesh(geometry1,material);
 	cylinder.position.set(17,5,0);
@@ -69,7 +68,6 @@ function init(){
 	scene.add(tank);
 	tank.position.set(0,2.5,0);
 	
-
 	return ;
 }
 
@@ -77,7 +75,7 @@ function animate(){
 	renderer.render(scene,camera);
 	requestAnimationFrame(animate);
 }
-//
+
 
 </script>
 
