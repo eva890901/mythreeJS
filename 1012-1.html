@@ -60,15 +60,19 @@ function init(){
 	box.position.set(10,0,0);
 	
 	
-	var geometry1 = new THREE.CylinderGeometry(3,3,10,64);
+	var geometry1 = new THREE.CylinderGeometry(2.5,2.5,10,64);
 	var cylinder = new THREE.Mesh(geometry1,material);
+<<<<<<< HEAD
 	cylinder.position.set(16.5,5,0);
 
+=======
+	cylinder.position.set(17,5,0);
+>>>>>>> master
 	var tank = new THREE.Object3D();
 	tank.add(box);
 	tank.add(cylinder);
 	scene.add(tank);
-	tank.position.set(0,2.5,-5);
+	tank.position.set(0,2.5,0);
 	
 
 	return ;
