@@ -121,7 +121,7 @@ function init() {
 
 function animate() {
 	angle += 0.01;
-	mesh.rotation.y = angle;
+	mesh.rotation.y = -angle;
 	
 	mesh.position.set(80*Math.cos(angle),0,80*Math.sin(angle));
 	camera1.lookAt (mesh.position);
