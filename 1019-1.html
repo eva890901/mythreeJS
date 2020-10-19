@@ -18,9 +18,9 @@ body {
 </style>
 </head>
 <body>
-<div id="info">lookAt vs. Gyro
+<div id="info">lookAt
 <br>
-<button id='switch'>using Gyro
+
 </button>
 </div>
 
@@ -33,15 +33,7 @@ body {
 <script>
 var camera, camera1, scene, renderer, mesh;
 var angle = 0;
-var gyro;
 var useGyro = true;
-
-$('#switch').click( 
-function() {
-	useGyro = !useGyro;
-  if (useGyro) $('#switch').text ('using Gyro');
-  else $('#switch').text ('using LookAt');
-})
 
 init();
 animate();
@@ -124,12 +116,7 @@ function init() {
 	mesh.add(car);
 	mesh.add(circle1);
 	scene.add(mesh);
-  gyro = new THREE.Gyroscope();
-  scene.add (gyro);
-  gyro.add (camera);
-  mesh.add (gyro);
   
-
 }
 
 function animate() {
@@ -140,10 +127,6 @@ function animate() {
 	camera1.lookAt (mesh.position);
 
 	requestAnimationFrame(animate);
-
-	if (useGyro)
-  	renderer.render (scene, camera);
-  else
   	renderer.render (scene, camera1);
 	
 }
