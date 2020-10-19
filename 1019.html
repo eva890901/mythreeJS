@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#info {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  color: #ffff00;
+}
+
+body {
+  overflow: hidden;
+}
+
+</style>
+</head>
+<body>
+<div id="info">lookAt vs. Gyro
+<br>
+<button id='switch'>using Gyro
+</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/107/three.min.js"></script>
+<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+<script src="https://raw.githack.com/mrdoob/three.js/dev/examples/js/misc/Gyroscope.js"></script>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+
+<script>
+var camera, camera1, scene, renderer, mesh;
+var angle = 0;
+var gyro;
+var useGyro = true;
+
+$('#switch').click( 
+function() {
+	useGyro = !useGyro;
+  if (useGyro) $('#switch').text ('using Gyro');
+  else $('#switch').text ('using LookAt');
+})
+
+init();
+animate();
+
+function init() {
+
+  scene = new THREE.Scene();
+
+  camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 1, 1000);
+  camera.position.z = 500;
+//  scene.add(camera);
+
+  camera1 = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 1, 1000);
+  camera1.position.z = 500;
+//  scene.add(camera1);
+
+	let light = new THREE.PointLight(0xffffff);
+  light.position.set(100, 300, 200);
+  scene.add(light);
+
+  let gridXZ = new THREE.GridHelper(200, 20, 'red', 'white');
+  scene.add(gridXZ);
+
+  renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0x888888);
+
+ 	let controls = new THREE.OrbitControls(camera, renderer.domElement);
+ 	let controls1 = new THREE.OrbitControls(camera1, renderer.domElement);
+
+  document.body.appendChild(renderer.domElement);
+  ////////////////////////////////////////////////////////////////////////
+
+  var geometry = new THREE.BoxGeometry(9,9,6);
+	var material = new THREE.MeshNormalMaterial();
+	var head = new THREE.Mesh(geometry,material);
+	head.position.set(0,36,0.5);
+	
+	var geometry1 = new THREE.BoxGeometry(9,13.5,5);
+	var body = new THREE.Mesh(geometry1,material);
+	body.position.set(0,27,0);
+	
+	var geometry2 = new THREE.BoxGeometry(3,13.5,5);
+	var hand = new THREE.Mesh(geometry2,material);
+	hand.position.set(4.5,27,0);
+	
+	var geometry3 = new THREE.BoxGeometry(3,13.5,5);
+	var hand1 = new THREE.Mesh(geometry3,material);
+	hand1.position.set(-4.5,27,0);
+	
+	var geometry4 = new THREE.BoxGeometry(4.5,13.5,5);
+	var feet = new THREE.Mesh(geometry4,material);
+	feet.position.set(2.25,13.5,0);
+	
+	var geometry5 = new THREE.BoxGeometry(4.5,13.5,5);
+	var feet1 = new THREE.Mesh(geometry5,material);
+	feet1.position.set(-2.25,13.5,0);
+	
+	var geometry6 = new THREE.BoxGeometry(18,5,5);
+	var car = new THREE.Mesh(geometry6,material);
+	car.position.set(0,5,0);
+	
+	var geometry7 = new THREE.CylinderGeometry(5,5,4,64);
+	var circle = new THREE.Mesh(geometry7,material);
+	circle.position.set(9.5,5,0);
+	circle.rotation.z=Math.PI/2;
+	
+	var geometry8 = new THREE.CylinderGeometry(5,5,4,64);
+	var circle1 = new THREE.Mesh(geometry8,material);
+	circle1.position.set(-9.5,5,0);
+	circle1.rotation.z=Math.PI/2;
+	
+	var geometry9= new THREE.BoxGeometry(0,0,0);
+	mesh = new THREE.Mesh(geometry9, material);
+	mesh.add(head);
+	mesh.add(body);
+	mesh.add(hand);
+	mesh.add(hand1);
+	mesh.add(feet);
+	mesh.add(feet1);
+	mesh.add(circle);
+	mesh.add(car);
+	mesh.add(circle1);
+	scene.add(mesh);
+  gyro = new THREE.Gyroscope();
+  scene.add (gyro);
+  gyro.add (camera);
+  mesh.add (gyro);
+  
+
+}
+
+function animate() {
+	angle += 0.01;
+	mesh.rotation.y = angle;
+	
+	mesh.position.set(80*Math.cos(angle),0,80*Math.sin(angle));
+	camera1.lookAt (mesh.position);
+
+	requestAnimationFrame(animate);
+
+	if (useGyro)
+  	renderer.render (scene, camera);
+  else
+  	renderer.render (scene, camera1);
+	
+}
+
+
+
+
+</script>
+</body>
+</html>
