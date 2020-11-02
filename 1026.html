@@ -194,9 +194,9 @@ function build(){
  wheel1.position.set(2.5, 2, -2);
  wheel2.position.set(2.5, 2, -14);
  base.position.set(0, 3, 0);
- base.rotation.y = !base.rotation.y*Math.PI/2;
- wheel1.rotation.z = !wheel1.rotation.z*Math.PI/2;
- wheel2.rotation.z = !wheel2.rotation.z*Math.PI/2;
+ base.rotation.y = Math.PI/2;
+ wheel1.rotation.z = Math.PI/2;
+ wheel2.rotation.z = Math.PI/2;
  return truck;
 }
 
