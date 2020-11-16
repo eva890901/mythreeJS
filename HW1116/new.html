@@ -49,32 +49,34 @@ var pTimes = 0, endPoint;
 var base, bases = [];
 var myLine = null;
 var isWalking, plane, press = false, turn;
-var truck;
+var truck,x;
 
 init();
 animate();
 function readModel (modelName, targetSize=40) {
-	var onProgress = function(xhr) {
-	if (xhr.lengthComputable) {
-		var percentComplete = xhr.loaded / xhr.total * 100;
-			console.log(Math.round(percentComplete, 2) + '% downloaded');
-		}
-	};
 
-	var onError = function(xhr) {};
+  var onProgress = function(xhr) {
+    if (xhr.lengthComputable) {
+      var percentComplete = xhr.loaded / xhr.total * 100;
+      console.log(Math.round(percentComplete, 2) + '% downloaded');
+    }
+  };
 
-	var mtlLoader =  new MTLLoader();
-	mtlLoader.setPath('models/');
-	mtlLoader.load(modelName+'.mtl', function(materials) {
-		materials.preload();
+  var onError = function(xhr) {};
 
-		var objLoader =  new OBJLoader();
-		objLoader.setMaterials(materials);
-		objLoader.setPath('models/');
-		objLoader.load(modelName+'.obj', function(object) {
+  var mtlLoader = new MTLLoader();
+  mtlLoader.setPath('models/');
+  mtlLoader.load(modelName+'.mtl', function(materials) {
 
+    materials.preload();
+
+    var objLoader = new OBJLoader();
+    objLoader.setMaterials(materials);
+    objLoader.setPath('models/');
+    objLoader.load(modelName+'.obj', function(object) {
+		
 		let theObject =  unitize (object, targetSize);
-		theObject.add(new THREE.BoxHelper(theObject));
+		theObject.add ( new THREE.BoxHelper (theObject) )
 		theObject.name = 'OBJ'
 		
 		truck = new THREE.Object3D();
@@ -83,14 +85,14 @@ function readModel (modelName, targetSize=40) {
 		
 		scene.add (truck);
 
-		}, onProgress, onError);
+    }, onProgress, onError);
 
-	});
+  });
 
 }
 
 function unitize (object, targetSize) {  
-
+	
 	// find bounding box of 'object'
 	var box3 = new THREE.Box3();
 	box3.setFromObject (object);
@@ -98,19 +100,21 @@ function unitize (object, targetSize) {
 	size.subVectors (box3.max, box3.min);
 	var center = new THREE.Vector3();
 	center.addVectors(box3.max, box3.min).multiplyScalar (0.5);
-
+	
 	console.log ('center: ' + center.x + ', '+center.y + ', '+center.z );
 	console.log ('size: ' + size.x + ', ' +  size.y + ', '+size.z );
-
+	
 	// uniform scaling according to objSize
 	var objSize = Math.max (size.x, size.y, size.z);
 	var scaleSet = targetSize/objSize;
-	
+				
 	var theObject =  new THREE.Object3D();
 	theObject.add (object);
 	object.scale.set (scaleSet, scaleSet, scaleSet);
-	object.position.set (-center.x*scaleSet, center.y*scaleSet/6, -center.z*scaleSet);
+	object.position.set (-center.x*scaleSet, center.y*scaleSet/2, -center.z*scaleSet);
+	
 	return theObject;
+			
 }
 function init(){
 	
@@ -153,6 +157,7 @@ function init(){
 	readModel('truck');
 	//-----------------
 	p[0] = new THREE.Vector3(10, 10, 10);
+
 	isWalking = false;
 	turn = false;
 	document.addEventListener('pointerdown', onDocumentMouseDown, false);
@@ -273,7 +278,10 @@ function addPoint(myPoint) {
 	
 	myLine.geometry.verticesNeedUpdate = true;
 }
-
+function whichButton(event) {
+   x = event.buttons;
+   return false;
+}
 function onDocumentMouseDown(event) {
 
 	event.preventDefault();
@@ -283,16 +291,13 @@ function onDocumentMouseDown(event) {
 	// find intersections
 	raycaster.setFromCamera(mouse, camera);
 	var intersects = raycaster.intersectObjects(pickables);
-	if(event.button === 0){
+	whichButton(event);
+	if(x === 1){
 		endPoint === false;
 		if (intersects.length > 0) {
 			let bb = base.clone();
 			bb.position.copy (intersects[0].point);
-			if(pTimes === 0) 
-				p[0] = new THREE.Vector3(intersects[0].point.x, 0, intersects[0].point.z);
-			else 
-				p.push(new THREE.Vector3(intersects[0].point.x, 0, intersects[0].point.z));
-			pTimes++;
+			p.push(new THREE.Vector3(intersects[0].point.x, 0, intersects[0].point.z));
 			bb.rotation.x = -Math.PI/2;
 			scene.add (bb);
 			bases.push (bb);
@@ -306,7 +311,7 @@ function onDocumentMouseDown(event) {
 
 		}
 	}
-	else if(event.button === 2){
+	else if(x === 2){
 		endPoint = true;
 		addPoint(p[0]);
 		now = 0;
